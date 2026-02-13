@@ -1,0 +1,5 @@
+{
+  "name": "TOEFL Build a Sentence Master",
+  "description": "A specialized practice tool for the new TOEFL Writing 'Build a Sentence' task. Features AI-generated questions with distractors and a 6-minute timed session.",
+  "requestFramePermissions": []
+}
