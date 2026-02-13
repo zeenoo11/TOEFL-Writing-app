@@ -62,7 +62,7 @@ export const fetchQuestions = async (): Promise<Question[]> => {
       const values = line.split("|");
 
       if (values.length < 7) {
-        console.error(`[Data Error] Line ${i} has insufficient fields: ${line}`);
+        console.error(`[Data Error] Line ${i + 1} has insufficient fields: ${line}`);
         continue;
       }
 
