@@ -13,7 +13,6 @@ if (!fs.existsSync(csvPath)) {
 
 const content = fs.readFileSync(csvPath, 'utf8');
 const lines = content.split(/\r?\n/).filter(line => line.trim() !== "");
-/).filter(line => line.trim() !== "");
 const headers = lines[0].split('|');
 
 let errorCount = 0;
