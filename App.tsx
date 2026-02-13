@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { AppState, Question, SessionResult } from './types';
-import { generateQuestions } from './services/geminiService';
+import { getRandomQuestions } from './services/questionService';
 import { Timer } from './components/Timer';
 import { SentenceBuilder } from './components/SentenceBuilder';
 
@@ -17,9 +17,9 @@ const App: React.FC = () => {
 
   const startQuiz = async () => {
     setAppState(AppState.LOADING);
-    setLoadingMessage("AI is curating US undergraduate level dialogues...");
+    setLoadingMessage("Loading questions...");
     try {
-      const newQuestions = await generateQuestions(TOTAL_QUESTIONS);
+      const newQuestions = await getRandomQuestions(TOTAL_QUESTIONS);
       setQuestions(newQuestions);
       setCurrentIndex(0);
       setResults([]);
