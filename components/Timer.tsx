@@ -28,7 +28,7 @@ export const Timer: React.FC<TimerProps> = ({ initialSeconds, onTimeUp, isActive
   const isLow = seconds < 60;
 
   return (
-    <div className={`flex items-center space-x-2 px-4 py-2 rounded-full font-mono text-xl font-bold shadow-sm transition-colors ${
+    <div className={`flex items-center space-x-1 sm:space-x-2 px-2 py-1 sm:px-4 sm:py-2 rounded-full font-mono text-base sm:text-xl font-bold shadow-sm transition-colors ${
       isLow ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-blue-100 text-blue-700'
     }`}>
       <i className="fa-regular fa-clock"></i>
