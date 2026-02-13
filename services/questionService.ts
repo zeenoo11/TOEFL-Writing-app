@@ -1,5 +1,5 @@
 
-import { Question } from "../types";
+import { Question, Difficulty } from "../types";
 
 export const fetchQuestions = async (): Promise<Question[]> => {
   try {
@@ -19,7 +19,7 @@ export const fetchQuestions = async (): Promise<Question[]> => {
       if (!line.trim()) continue;
 
       const values = line.split("|");
-      if (values.length < 6) {
+      if (values.length < 7) {
           console.warn(`Skipping malformed line ${i}: ${line}`);
           continue;
       }
@@ -36,6 +36,7 @@ export const fetchQuestions = async (): Promise<Question[]> => {
       }
       const correctSentence = values[4];
       const distractor = values[5].trim();
+      const difficulty = values[6].trim() as Difficulty;
 
       questions.push({
         id,
@@ -43,7 +44,8 @@ export const fetchQuestions = async (): Promise<Question[]> => {
         template,
         scrambledWords,
         correctSentence,
-        distractor
+        distractor,
+        difficulty
       });
     }
 
@@ -54,14 +56,20 @@ export const fetchQuestions = async (): Promise<Question[]> => {
   }
 };
 
-export const getRandomQuestions = async (count: number): Promise<Question[]> => {
+export const getRandomQuestions = async (count: number, difficulty: Difficulty): Promise<Question[]> => {
     const allQuestions = await fetchQuestions();
     if (allQuestions.length === 0) {
         throw new Error("No questions available. Please ensure public/questions.csv exists and is populated.");
     }
 
+    const filteredQuestions = allQuestions.filter(q => q.difficulty === difficulty);
+
+    if (filteredQuestions.length === 0) {
+        throw new Error(`No questions available for difficulty: ${difficulty}`);
+    }
+
     // Fisher-Yates shuffle
-    const shuffled = [...allQuestions];
+    const shuffled = [...filteredQuestions];
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
