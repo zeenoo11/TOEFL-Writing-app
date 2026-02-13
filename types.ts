@@ -6,6 +6,7 @@ export interface Question {
   scrambledWords: string[]; // Includes 1 distractor
   correctSentence: string;
   distractor: string;
+  difficulty: Difficulty;
 }
 
 export interface SessionResult {
@@ -26,3 +27,5 @@ export enum AppState {
   QUIZ,
   RESULT
 }
+
+export type Difficulty = 'Middle School' | 'High School' | 'University';

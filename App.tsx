@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { AppState, Question, SessionResult } from './types';
+import { AppState, Question, SessionResult, Difficulty } from './types';
 import { getRandomQuestions } from './services/questionService';
 import { Timer } from './components/Timer';
 import { SentenceBuilder } from './components/SentenceBuilder';
@@ -14,12 +14,17 @@ const App: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [results, setResults] = useState<SessionResult['answers']>([]);
   const [loadingMessage, setLoadingMessage] = useState("Preparing your TOEFL session...");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
   const startQuiz = async () => {
+    if (!selectedDifficulty) {
+      alert("Please select a difficulty level.");
+      return;
+    }
     setAppState(AppState.LOADING);
     setLoadingMessage("Loading questions...");
     try {
-      const newQuestions = await getRandomQuestions(TOTAL_QUESTIONS);
+      const newQuestions = await getRandomQuestions(TOTAL_QUESTIONS, selectedDifficulty);
       setQuestions(newQuestions);
       setCurrentIndex(0);
       setResults([]);
@@ -64,37 +69,39 @@ const App: React.FC = () => {
           </div>
           <h1 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">TOEFL Writing:<br/><span className="text-blue-600">Advanced Build a Sentence</span></h1>
           <p className="text-slate-600 text-lg mb-8 leading-relaxed">
-            Master the new TOEFL Writing task with dialogues designed for <span className="font-bold text-blue-700">US Undergraduate level</span> proficiency. 
-            Construct sophisticated academic and professional responses.
+            Master the new TOEFL Writing task. Select your difficulty level to begin.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-            <div className="flex items-center space-x-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-              <i className="fa-solid fa-comments text-blue-500"></i>
-              <span className="text-sm font-semibold text-slate-700">Q&A Dialogue Format</span>
-            </div>
-            <div className="flex items-center space-x-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-              <i className="fa-solid fa-shuffle text-purple-500"></i>
-              <span className="text-sm font-semibold text-slate-700">Randomized Word Bank</span>
-            </div>
-            <div className="flex items-center space-x-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-              <i className="fa-solid fa-skull-crossbones text-red-500"></i>
-              <span className="text-sm font-semibold text-slate-700">1 Hidden Distractor</span>
-            </div>
-            <div className="flex items-center space-x-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-              <i className="fa-solid fa-bolt text-amber-500"></i>
-              <span className="text-sm font-semibold text-slate-700">6 Minute Time Limit</span>
-            </div>
+          <div className="flex flex-col space-y-3 mb-8">
+             <button
+                onClick={() => setSelectedDifficulty('Middle School')}
+                className={`py-4 px-6 rounded-2xl border-2 font-bold text-lg transition-all ${selectedDifficulty === 'Middle School' ? 'bg-blue-100 border-blue-600 text-blue-800' : 'bg-white border-slate-200 text-slate-600 hover:border-blue-400'}`}
+             >
+                Middle School
+             </button>
+             <button
+                onClick={() => setSelectedDifficulty('High School')}
+                className={`py-4 px-6 rounded-2xl border-2 font-bold text-lg transition-all ${selectedDifficulty === 'High School' ? 'bg-blue-100 border-blue-600 text-blue-800' : 'bg-white border-slate-200 text-slate-600 hover:border-blue-400'}`}
+             >
+                High School
+             </button>
+             <button
+                onClick={() => setSelectedDifficulty('University')}
+                className={`py-4 px-6 rounded-2xl border-2 font-bold text-lg transition-all ${selectedDifficulty === 'University' ? 'bg-blue-100 border-blue-600 text-blue-800' : 'bg-white border-slate-200 text-slate-600 hover:border-blue-400'}`}
+             >
+                University
+             </button>
           </div>
 
           <button 
             onClick={startQuiz}
-            className="w-full py-5 bg-slate-900 hover:bg-black text-white rounded-2xl text-xl font-bold shadow-xl transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center group"
+            disabled={!selectedDifficulty}
+            className={`w-full py-5 rounded-2xl text-xl font-bold shadow-xl transition-all flex items-center justify-center group ${!selectedDifficulty ? 'bg-slate-300 cursor-not-allowed text-slate-500' : 'bg-slate-900 hover:bg-black text-white hover:scale-[1.02] active:scale-95'}`}
           >
             Launch Practice Session <i className="fa-solid fa-rocket ml-3 group-hover:translate-x-1 transition-transform"></i>
           </button>
         </div>
-        <p className="mt-8 text-slate-400 text-xs uppercase tracking-widest font-bold">ETS Specification Compliant • US Academic Level</p>
+        <p className="mt-8 text-slate-400 text-xs uppercase tracking-widest font-bold">ETS Specification Compliant</p>
       </div>
     );
   }
