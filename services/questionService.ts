@@ -8,6 +8,15 @@ const validateQuestion = (q: Question, index: number): string | null => {
     return `Line ${index}: Missing essential fields (id, context, or correctSentence).`;
   }
 
+  // 템플릿, 스크램블 단어, 난이도 기본 값 검증
+  if (
+    !q.template ||
+    !Array.isArray(q.scrambledWords) ||
+    q.scrambledWords.length === 0 ||
+    !q.difficulty
+  ) {
+    return `Line ${index} [ID: ${q.id}]: Missing or invalid template, scrambledWords, or difficulty.`;
+  }
   // 템플릿 빈칸 개수 계산
   const blankCount = (q.template.match(/_{3,}/g) || []).length;
   const wordCount = q.scrambledWords.length;
